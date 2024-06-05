@@ -7,8 +7,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.actor }}/rmji:latest
-  # add????  :$(date +%s)
+  IMAGE_NAME: pgirich/rmji:latest
 
 jobs:
   publish:
