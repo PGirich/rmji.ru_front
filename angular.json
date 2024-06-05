@@ -40,7 +40,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/rjmi_front",
+            "outputPath": "dist/rmji.ru",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -91,10 +91,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "rjmi_front:build:production"
+              "buildTarget": "rmji.ru:build:production"
             },
             "development": {
-              "buildTarget": "rjmi_front:build:development"
+              "buildTarget": "rmji.ru:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -121,6 +121,9 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }

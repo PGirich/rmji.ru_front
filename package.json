@@ -1,5 +1,5 @@
 {
-  "name": "rjmi-front",
+  "name": "rmji.ru",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:rjmi_front": "node dist/rjmi_front/server/server.mjs"
+    "serve:ssr:rmji.ru": "node dist/rmji.ru/server/server.mjs",
+    "deploy": "ng deploy --base-href=https://github.com/PGirich/rmji.ru.git"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +34,7 @@
     "@types/express": "^4.17.17",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
+    "angular-cli-ghpages": "^2.0.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
