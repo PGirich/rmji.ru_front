@@ -1,6 +1,6 @@
-# 
-- ng add angular-cli-ghpages
-// deploy to  https://pgirich.github.io/rmji.ru/
+# commands
+  - ng new rmji.ru --inline-style --inline-template --routing --skip-tests
+  - ng add angular-cli-ghpages // deploy to  https://pgirich.github.io/rmji.ru/
 
 
 # RmjiFront
