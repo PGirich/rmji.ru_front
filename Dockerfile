@@ -5,7 +5,7 @@ RUN npm install -g @angular/cli@18
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN ["ng", "build"]
+RUN ng build
 
 # production stage
 FROM node:lts-alpine as production
