@@ -16,14 +16,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
       - name: Build the Docker image
         run: |
           docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME }}
 
-      - name: Docker Login
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.2.0
         with:
-          username: PGirich
+          registry: ghcr.io
+          username: ${{ github.actor }}
           password: ${{ secrets.PAT }}
-          # Log out from the Docker registry at the end of a job
           logout: true
