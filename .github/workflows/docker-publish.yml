@@ -39,7 +39,7 @@ jobs:
           SSH_KEY: ${{ secrets.VPS_KEY }}
 
       - name: Deploy to VPS by SSH
-        run: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -v "docker compose pull && docker compose up -d && exit"
+        run: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -v -i /home/runner/.ssh/id_rsa "docker compose pull && docker compose up -d && exit"
 
       - name: Deploy to VPS
         uses: nekiro/ssh-job@main
