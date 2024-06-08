@@ -3,7 +3,7 @@ FROM node:lts-alpine as build
 WORKDIR /app
 RUN npm install -g @angular/cli@18
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN ng build
 
