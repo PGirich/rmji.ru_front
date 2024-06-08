@@ -30,6 +30,18 @@ jobs:
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Deploy to VPS
+        uses: nekiro/ssh-job@main
+        with:
+          host: ${{ secrets.VPS_IP }}
+          key: ${{ secrets.VPS_KEY }}
+          user: ${{ secrets.VPS_LOGIN }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          command: |
+            docker login ghcr.io -u ${{ github.actor }} -p ${{  secrets.FULL_TOKEN }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_IP }}
