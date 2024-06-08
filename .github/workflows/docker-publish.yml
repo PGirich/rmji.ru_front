@@ -29,6 +29,10 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: debug env
+        run: |
+          echo "host: ${{ secrets.VPS_IP }}; username: ${{ secrets.VPS_LOGIN }}; password: ${{ secrets.VPS_PASSWORD }};
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
