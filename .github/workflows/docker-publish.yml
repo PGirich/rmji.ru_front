@@ -7,6 +7,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
+  REGISTRY_USER: pgirich
   IMAGE_NAME: pgirich/rmji:latest
   SSH: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa
 
@@ -25,7 +26,7 @@ jobs:
 
       - name: Login to GitHub Container Registry - ${{ env.REGISTRY }}
         run: |
-          docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}
+          docker login ${{ env.REGISTRY }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.FULL_TOKEN }}
 
       - name: Push the Docker image
         run: |
@@ -37,6 +38,6 @@ jobs:
           echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
           cat ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
-          ${{ env.SSH }} "docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}"
+          ${{ env.SSH }} "docker login ${{ env.REGISTRY }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.FULL_TOKEN }}"
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
