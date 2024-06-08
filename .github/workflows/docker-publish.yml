@@ -43,10 +43,14 @@ jobs:
         run: |
           ${{ env.SSH }} "docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
 
+      - name: Deploy to VPS by SSH - inspect
+        run: |
+          ${{ env.SSH }} "sudo docker inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+
       - name: Deploy to VPS by SSH - pull
         run: |
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
       - name: Deploy to VPS by SSH - run
         run: |
-            ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
