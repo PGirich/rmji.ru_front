@@ -31,4 +31,4 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-        docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
