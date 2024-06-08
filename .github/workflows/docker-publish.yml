@@ -29,7 +29,12 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Push the Docker image
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.VPS_KEY }}
+
+      - name: Deploy to VPS
         run: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} "docker compose pull && docker compose up -d && exit"
 
       - name: Deploy to VPS
