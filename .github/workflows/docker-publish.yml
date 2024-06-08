@@ -29,15 +29,6 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.VPS_KEY }}
-          known_hosts: ${{ secrets.VPS_IP }}
-
-      - name: Deploy to VPS by SSH
-        run: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} "docker compose pull && docker compose up -d && exit"
-
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
@@ -49,3 +40,12 @@ jobs:
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.VPS_KEY }}
+          known_hosts: ${{ secrets.VPS_IP }}
+
+      - name: Deploy to VPS by SSH
+        run: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} "docker compose pull && docker compose up -d && exit"
