@@ -8,6 +8,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   IMAGE_NAME: pgirich/rmji:latest
+  SSH: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa
 
 jobs:
   publish:
@@ -35,9 +36,9 @@ jobs:
           echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
           cat ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
-          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa "docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}"
-          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
-          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          ${{ env.SSH }} "docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}"
+          ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
       - name: Deploy to VPS
         uses: nekiro/ssh-job@main
