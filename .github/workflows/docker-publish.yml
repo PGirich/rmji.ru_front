@@ -33,6 +33,7 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
           ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -v -i /home/runner/.ssh/id_rsa "docker compose pull && docker compose up -d && exit"
 
