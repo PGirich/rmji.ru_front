@@ -32,12 +32,18 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Deploy to VPS by SSH
+      - name: Install SSH key of VPS
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
           cat ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
+
+      - name: Deploy to VPS by SSH
+        run: |
+          echo '================================'
           ${{ env.SSH }} "docker login ${{ env.REGISTRY }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
+          echo '================================'
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          echo '================================'
           ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
