@@ -16,16 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ${{ vars.GITHUB_ACTOR }} run checkout for ${{ vars.GITHUB_REPOSITORY}}
+      - name: ${{ github.actor }} run checkout for ${{ github.repository}}
         uses: actions/checkout@v4
 
       - name: Build the Docker image - ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         run: |
           docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Login to GitHub Container Registry
+      - name: Login to GitHub Container Registry - ${{ env.REGISTRY }}
         run: |
-          docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}
+          docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}
 
       - name: Push the Docker image
         run: |
@@ -37,36 +37,6 @@ jobs:
           echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
           cat ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
-          ${{ env.SSH }} "docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}"
+          ${{ env.SSH }} "docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}"
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
-
-      - name: Deploy to VPS
-        uses: nekiro/ssh-job@main
-        with:
-          host: ${{ secrets.VPS_IP }}
-          key: ${{ secrets.VPS_KEY }}
-          user: ${{ secrets.VPS_LOGIN }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          command: |
-            docker login ghcr.io -u ${{ github.actor }} -p ${{  secrets.FULL_TOKEN }}
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_IP }}
-          username: ${{ secrets.VPS_LOGIN }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          key: ${{ secrets.VPS_KEY }}
-          script: |
-            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.VPS_KEY }}
-          known_hosts: ${{ secrets.VPS_IP }}
