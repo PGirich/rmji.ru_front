@@ -29,17 +29,12 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Deploy to VPS
-        uses: invi5H/ssh-action@v1
-        with:
-          NAME: bar
-          SSH_HOST: ${{ secrets.VPS_IP }}
-          SSH_PORT: 22
-          SSH_USER: ${{ secrets.VPS_LOGIN }}
-          SSH_KEY: ${{ secrets.VPS_KEY }}
-
       - name: Deploy to VPS by SSH
-        run: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -v -i /home/runner/.ssh/id_rsa "docker compose pull && docker compose up -d && exit"
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
+          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -v -i /home/runner/.ssh/id_rsa "docker compose pull && docker compose up -d && exit"
 
       - name: Deploy to VPS
         uses: nekiro/ssh-job@main
