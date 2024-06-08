@@ -37,4 +37,6 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           key: ${{ secrets.VPS_KEY }}
           script: |
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
