@@ -8,7 +8,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   REGISTRY_USER: PGirich
-  IMAGE_NAME: PGirich/rmji:latest
+  IMAGE_NAME: pgirich/rmji:latest
   SSH: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa
 
 jobs:
