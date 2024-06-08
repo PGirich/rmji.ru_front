@@ -41,7 +41,7 @@ jobs:
 
       - name: Login to registry - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
         run: |
-          ${{ env.SSH }} "docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
+          ${{ env.SSH }} "sudo docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
 
       - name: Deploy to VPS by SSH - inspect
         run: |
