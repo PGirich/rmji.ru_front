@@ -19,7 +19,7 @@ jobs:
       - name: ${{ vars.GITHUB_ACTOR }} run checkout for ${{ vars.GITHUB_REPOSITORY}}
         uses: actions/checkout@v4
 
-      - name: Build the Docker image
+      - name: Build the Docker image - ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         run: |
           docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
