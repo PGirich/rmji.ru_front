@@ -26,7 +26,7 @@ jobs:
 
       - name: Login to GitHub Container Registry - ${{ env.REGISTRY }}
         run: |
-          docker login ${{ env.REGISTRY }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}
+          docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}
 
       - name: Push the Docker image
         run: |
