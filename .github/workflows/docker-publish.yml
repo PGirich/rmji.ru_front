@@ -35,7 +35,9 @@ jobs:
           echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
           cat ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
-          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -v -i ~/.ssh/id_rsa "docker compose pull && docker compose up -d && exit"
+          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa "docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.FULL_TOKEN }}"
+          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa "docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
       - name: Deploy to VPS
         uses: nekiro/ssh-job@main
