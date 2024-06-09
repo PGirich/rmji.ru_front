@@ -9,6 +9,6 @@ RUN ng build
 
 # production stage
 FROM nginx:alpine-slim as production
-COPY --from=build /dist/rmji.ru/browser /usr/share/nginx/html
+COPY --from=build /app/dist/rmji.ru/browser /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
