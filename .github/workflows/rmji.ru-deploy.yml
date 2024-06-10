@@ -43,7 +43,11 @@ jobs:
         run: |
           ${{ env.SSH }} "sudo docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
 
-      - name: Deploy to VPS by SSH - pull
+      - name: Deploy certbot to VPS by SSH - pull
+        run: |
+          ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/jonasal/nginx-certbot:latest"
+
+      - name: Deploy app to VPS by SSH - pull
         run: |
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
