@@ -47,10 +47,18 @@ jobs:
         run: |
           ${{ env.SSH }} "sudo docker pull jonasal/nginx-certbot:latest"
 
+      - name: Deploy certbot to VPS by SSH - create
+        run: |
+          sudo docker create -it -p 80:80 -p 443:443 \
+           --env CERTBOT_EMAIL=petr.girich@yandex.ru \
+           -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
+           -v /etc/nginx/user_conf.d:/etc/nginx/user_conf.d:ro \
+           --name certbot jonasal/nginx-certbot:latest
+
       - name: Deploy app to VPS by SSH - pull
         run: |
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
       - name: Deploy to VPS by SSH - run
         run: |
-          ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --name rmji"
