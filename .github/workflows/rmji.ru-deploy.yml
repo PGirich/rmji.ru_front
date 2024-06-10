@@ -53,7 +53,7 @@ jobs:
            --env CERTBOT_EMAIL=petr.girich@yandex.ru \
            -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
            -v /etc/nginx/user_conf.d:/etc/nginx/user_conf.d:ro \
-           --name certbot jonasal/nginx-certbot:latest
+           --name certbot ${{ env.REGISTRY }}/jonasal/nginx-certbot:latest
 
       - name: Deploy app to VPS by SSH - pull
         run: |
@@ -61,4 +61,4 @@ jobs:
 
       - name: Deploy to VPS by SSH - run
         run: |
-          ${{ env.SSH }} "sudo docker run ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --name rmji"
+          ${{ env.SSH }} "sudo docker run --name rmji ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
