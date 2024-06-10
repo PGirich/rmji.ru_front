@@ -45,7 +45,7 @@ jobs:
 
       - name: Deploy certbot to VPS by SSH - pull
         run: |
-          ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/jonasal/nginx-certbot:latest"
+          ${{ env.SSH }} "sudo docker pull jonasal/nginx-certbot:latest"
 
       - name: Deploy app to VPS by SSH - pull
         run: |
