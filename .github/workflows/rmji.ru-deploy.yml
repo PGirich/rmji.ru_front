@@ -54,8 +54,25 @@ jobs:
            -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
            -v /etc/nginx/user_conf.d:/etc/nginx/user_conf.d:ro \
            --name certbot --pull never \
-           jonasal/nginx-certbot:latest
+           jonasal/nginx-certbot
 
+      - name: Deploy certbot to VPS by SSH - volume
+        run: |
+          sudo mkdir /etc/nginx/user_conf.d/
+          sudo touch /etc/nginx/user_conf.d/nginx.conf
+          sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf
+          sudo echo "server {
+            listen 443 ssl default_server reuseport;
+            listen [::]:443 ssl default_server reuseport;
+            server_name rmji.ru www.rmji.ru;
+            ssl_certificate /etc/letsencrypt/live/rmji/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/rmji/privkey.pem;
+            ssl_trusted_certificate /etc/letsencrypt/live/rmji/chain.pem;
+            ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem;
+            return 200 'Let\'s Encrypt certificate successfully installed!';
+            add_header Content-Type text/plain;
+          }" >> nginx.conf
+          
       - name: Deploy app to VPS by SSH - pull
         run: |
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
