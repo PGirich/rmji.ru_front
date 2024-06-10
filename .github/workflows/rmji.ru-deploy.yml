@@ -53,7 +53,8 @@ jobs:
            --env CERTBOT_EMAIL=petr.girich@yandex.ru \
            -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
            -v /etc/nginx/user_conf.d:/etc/nginx/user_conf.d:ro \
-           --name certbot ${{ env.REGISTRY }}/jonasal/nginx-certbot:latest
+           --name certbot --pull never \
+           jonasal/nginx-certbot:latest
 
       - name: Deploy app to VPS by SSH - pull
         run: |
