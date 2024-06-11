@@ -17,6 +17,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Deploy certbot to VPS by SSH - volume
+        run: |
+          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/"
+          ${{ env.SSH }} "sudo rm -f /etc/nginx/user_conf.d/nginx.conf"
+          ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf"
+          ${{ env.SSH }} "sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf"
+          ${{ env.SSH }} "sudo echo 'server { \
+              listen 443 ssl default_server reuseport; \
+              listen [::]:443 ssl default_server reuseport; \
+              server_name rmji.ru www.rmji.ru; \
+              ssl_certificate /etc/letsencrypt/live/rmji/fullchain.pem; \
+              ssl_certificate_key /etc/letsencrypt/live/rmji/privkey.pem; \
+              ssl_trusted_certificate /etc/letsencrypt/live/rmji/chain.pem; \
+              ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem; \
+              return 200 'Let\'s Encrypt certificate successfully installed!'; \
+              add_header Content-Type text/plain; \
+            }' >> /etc/nginx/user_conf.d/nginx.conf"
+
+
       - name: ${{ github.actor }} run checkout for ${{ github.repository}}
         uses: actions/checkout@v4
 
@@ -42,24 +61,6 @@ jobs:
       - name: Login to registry - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
         run: |
           ${{ env.SSH }} "sudo docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
-
-      - name: Deploy certbot to VPS by SSH - volume
-        run: |
-          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/"
-          ${{ env.SSH }} "sudo rm -f /etc/nginx/user_conf.d/nginx.conf"
-          ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf"
-          ${{ env.SSH }} "sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf"
-          ${{ env.SSH }} "sudo echo 'server { \
-              listen 443 ssl default_server reuseport; \
-              listen [::]:443 ssl default_server reuseport; \
-              server_name rmji.ru www.rmji.ru; \
-              ssl_certificate /etc/letsencrypt/live/rmji/fullchain.pem; \
-              ssl_certificate_key /etc/letsencrypt/live/rmji/privkey.pem; \
-              ssl_trusted_certificate /etc/letsencrypt/live/rmji/chain.pem; \
-              ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem; \
-              return 200 'Let\'s Encrypt certificate successfully installed!'; \
-              add_header Content-Type text/plain; \
-            }' >> /etc/nginx/user_conf.d/nginx.conf"
 
       - name: Deploy certbot to VPS by SSH - pull
         run: |
