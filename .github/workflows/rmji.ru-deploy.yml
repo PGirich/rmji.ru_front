@@ -48,7 +48,7 @@ jobs:
           ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/"
           ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf"
           ${{ env.SSH }} "sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf"
-          ${{ env.SSH }} "sudo echo "server { \
+          ${{ env.SSH }} "sudo echo 'server { \
               listen 443 ssl default_server reuseport; \
               listen [::]:443 ssl default_server reuseport; \
               server_name rmji.ru www.rmji.ru; \
@@ -58,7 +58,7 @@ jobs:
               ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem; \
               return 200 'Let\'s Encrypt certificate successfully installed!'; \
               add_header Content-Type text/plain; \
-            }" >> /etc/nginx/user_conf.d/nginx.conf"
+            }' >> /etc/nginx/user_conf.d/nginx.conf"
 
       - name: Deploy certbot to VPS by SSH - pull
         run: |
