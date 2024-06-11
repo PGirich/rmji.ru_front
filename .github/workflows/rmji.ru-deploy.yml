@@ -30,6 +30,12 @@ jobs:
           ${{ env.SSH }} "sudo rm -f /etc/nginx/user_conf.d/nginx.conf"
           ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf"
           ${{ env.SSH }} "sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf"
+          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/live/rmji/"
+          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/dhparams/"
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/fullchain.pem
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/privkey.pem
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/chain.pem
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/dhparams/dhparam.pem
           ${{ env.SSH }} "sudo echo 'server { \
               listen 443 ssl default_server reuseport; \
               listen [::]:443 ssl default_server reuseport; \
