@@ -17,6 +17,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install SSH key of VPS
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
+
       - name: Deploy certbot to VPS by SSH - volume
         run: |
           ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/"
@@ -50,13 +57,6 @@ jobs:
       - name: Push the Docker image
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Install SSH key of VPS
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
-          cat ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
 
       - name: Login to registry - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
         run: |
