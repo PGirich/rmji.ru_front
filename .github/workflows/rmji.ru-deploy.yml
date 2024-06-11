@@ -57,9 +57,9 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Kill all containers on VPS
+      - name: Kill containers on VPS
         run: |
-          ${{ env.SSH }} "sudo docker rm $(sodo docker ps -a -q)"
+          ${{ env.SSH }} "sudo docker rm -f certbot rmji"
 
       - name: Login to registry from VPS - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
         run: |
