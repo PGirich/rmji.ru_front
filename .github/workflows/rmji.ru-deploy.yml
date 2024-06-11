@@ -58,7 +58,7 @@ jobs:
               ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem; \
               return 200 'Let\'s Encrypt certificate successfully installed!'; \
               add_header Content-Type text/plain; \
-            }" >> nginx.conf"
+            }" >> /etc/nginx/user_conf.d/nginx.conf"
 
       - name: Deploy certbot to VPS by SSH - pull
         run: |
