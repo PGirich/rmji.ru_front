@@ -38,7 +38,7 @@ jobs:
               ssl_certificate_key /etc/letsencrypt/live/rmji/privkey.pem; \
               ssl_trusted_certificate /etc/letsencrypt/live/rmji/chain.pem; \
               ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem; \
-              return 200 'Let\'s Encrypt certificate successfully installed!'; \
+              return 200; \
               add_header Content-Type text/plain; \
             }' >> /etc/nginx/user_conf.d/nginx.conf"
 
@@ -59,7 +59,7 @@ jobs:
 
       - name: Kill containers on VPS
         run: |
-          ${{ env.SSH }} "sudo docker rm -f certbot rmji"
+          ${{ env.SSH }} "sudo docker rm -f certbot rmji || exit 0"
 
       - name: Login to registry from VPS - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
         run: |
