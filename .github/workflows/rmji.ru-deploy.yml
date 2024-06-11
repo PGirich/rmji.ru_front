@@ -58,7 +58,11 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Login to registry - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
+      - name: Kill all containers on VPS
+        run: |
+          ${{ env.SSH }} "docker rm $(docker ps -a -q)"
+
+      - name: Login to registry from VPS - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
         run: |
           ${{ env.SSH }} "sudo docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
 
