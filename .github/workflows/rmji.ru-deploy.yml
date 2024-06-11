@@ -46,6 +46,7 @@ jobs:
       - name: Deploy certbot to VPS by SSH - volume
         run: |
           ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/"
+          ${{ env.SSH }} "sudo rm /etc/nginx/user_conf.d/nginx.conf"
           ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf"
           ${{ env.SSH }} "sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf"
           ${{ env.SSH }} "sudo echo 'server { \
