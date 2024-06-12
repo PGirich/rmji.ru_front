@@ -10,9 +10,7 @@ env:
   REGISTRY_USER: PGirich
   IMAGE_NAME: pgirich/rmji:latest
   SSH: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa
-  CERT_PATH: /etc/nginx/nginx_secrets/live/rmji
-  DHP_PATH: /etc/nginx/nginx_secrets/dhparams
-  CONF_PATH: /etc/nginx/user_conf.d
+  CERT_PATH: /etc/nginx/nginx_secrets
 
 jobs:
   certbot:
@@ -32,7 +30,7 @@ jobs:
 
       - name: Install certbot artefacts
         run: |
-           ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
+          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
 
       - name: Kill containers on VPS
         run: |
@@ -50,16 +48,16 @@ jobs:
         run: |
           ${{ env.SSH }} "sudo docker create \
             -it -p 80:80 \
-            -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
+            -v ${{ env.CERT_PATH }}:/etc/letsencrypt \
             --name certbot --pull never \
             certbot/certbot \
             certonly --standalone --non-interactive \
             --email petr.girich@yandex.ru \
             --agree-tos \
             --preferred-challenges http \
-            --dry-run \
             -d rmji.ru -d www.rmji.ru \
             "
+        #--dry-run \
 
       - name: Create certbot container on VPS
         run: |
