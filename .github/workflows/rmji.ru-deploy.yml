@@ -58,7 +58,7 @@ jobs:
       - name: Create app container on VPS
         run: |
           ${{ env.SSH }} "sudo docker create \
-          -d -it -p 80:80 -p 443:443 \
+          -it -p 80:80 -p 443:443 \
           -v ${{ env.CERT_PATH }}:/etc/letsencrypt \
           --name rmji --pull never \
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
@@ -66,4 +66,4 @@ jobs:
 
       - name: Run app on VPS
         run: |
-          ${{ env.SSH }} "sudo docker container start -a rmji"
+          ${{ env.SSH }} "sudo docker container start -d -a rmji"
