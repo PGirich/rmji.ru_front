@@ -5,19 +5,25 @@ on:
     branches: ["master"]
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   REGISTRY_USER: PGirich
   IMAGE_NAME: pgirich/rmji:latest
   SSH: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa
   CERT_PATH: /etc/nginx/nginx_secrets
+  # cert files in: /etc/nginx/nginx_secrets/live/rmji.ru/*.pem
+  # cert.pem  chain.pem  fullchain.pem  privkey.pem
 
 jobs:
+  ############################################
   certbot:
     name: publish certbot
     runs-on: ubuntu-latest
 
     steps:
+      - name: No regular calls to letsencrypt
+        run: |
+          exit -1
+
       - name: ${{ github.actor }} run checkout for ${{ github.repository}}
         uses: actions/checkout@v4
 
@@ -63,16 +69,13 @@ jobs:
         run: |
           ${{ env.SSH }} "sudo docker container start -a certbot"
 
+  ############################################
   publish:
     name: publish rmji.ru app
     runs-on: ubuntu-latest
-    needs: certbot
+    #needs: certbot
 
     steps:
-      - name: Error
-        run: |
-          exit -1
-
       - name: ${{ github.actor }} run checkout for ${{ github.repository}}
         uses: actions/checkout@v4
 
@@ -107,6 +110,15 @@ jobs:
         run: |
           ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
-      - name: Run app image on VPS
+      - name: Create app container on VPS
         run: |
-          ${{ env.SSH }} "sudo docker run --name rmji ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          ${{ env.SSH }} "sudo docker create \
+          -it -p 80:80 -p 443:443 \
+          -v ${{ env.CERT_PATH }}:/etc/letsencrypt \
+          --name rmji --pull never \
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
+          "
+
+      - name: Run app on VPS
+        run: |
+          ${{ env.SSH }} "sudo docker container start -a rmji"
