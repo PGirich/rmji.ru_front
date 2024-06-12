@@ -76,7 +76,8 @@ jobs:
   publish:
     name: publish rmji.ru app
     runs-on: ubuntu-latest
-
+    needs: certbot
+    
     steps:
       - name: Error
         run: |
