@@ -10,6 +10,9 @@ env:
   REGISTRY_USER: PGirich
   IMAGE_NAME: pgirich/rmji:latest
   SSH: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa
+  CERT_PATH: /etc/nginx/nginx_secrets/live/rmji
+  DHP_PATH: /etc/nginx/nginx_secrets/dhparams
+  CONF_PATH: /etc/nginx/user_conf.d
 
 jobs:
   certbot:
@@ -29,21 +32,24 @@ jobs:
 
       - name: Install certbot artefacts
         run: |
-          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/ || exit 0"
-          ${{ env.SSH }} "sudo rm -f /etc/nginx/user_conf.d/nginx.conf || exit 0"
-          ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf || exit 0"
-          ${{ env.SSH }} "sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf"
-          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/live/rmji/ || exit 0"
-          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/dhparams/ || exit 0"
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/fullchain.pem || exit 0"
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/privkey.pem || exit 0"
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/chain.pem || exit 0"
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/dhparams/dhparam.pem || exit 0"
-
-          ${{ env.SSH }} "sudo echo 'stub data' >> /etc/nginx/nginx_secrets/live/rmji/fullchain.pem"
-          ${{ env.SSH }} "echo 'stub data' >> /etc/nginx/nginx_secrets/live/rmji/privkey.pem || exit 0"
-          ${{ env.SSH }} "echo 'stub data' >> /etc/nginx/nginx_secrets/live/rmji/chain.pem || exit 0"
-          ${{ env.SSH }} "echo 'stub data' >> /etc/nginx/nginx_secrets/dhparams/dhparam.pem || exit 0"
+          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CONF_PATH }} || exit 0"
+          ${{ env.SSH }} "sudo rm -f ${{ env.CONF_PATH }}/nginx.conf || exit 0"
+          ${{ env.SSH }} "sudo touch ${{ env.CONF_PATH }}/nginx.conf || exit 0"
+          ${{ env.SSH }} "sudo chmod 777 ${{ env.CONF_PATH }}/nginx.conf"
+          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
+          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.DHP_PATH }} || exit 0"
+          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/fullchain.pem || exit 0"
+          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/privkey.pem || exit 0"
+          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/chain.pem || exit 0"
+          ${{ env.SSH }} "sudo touch ${{ env.DHP_PATH }}/dhparam.pem || exit 0"
+          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/fullchain.pem"
+          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/privkey.pem"
+          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/chain.pem"
+          ${{ env.SSH }} "sudo chmod 777 ${{ env.DHP_PATH }}/dhparam.pem"
+          ${{ env.SSH }} "sudo echo 'stub data' >> ${{ env.CERT_PATH }}/fullchain.pem"
+          ${{ env.SSH }} "echo 'stub data' >> ${{ env.CERT_PATH }}/privkey.pem || exit 0"
+          ${{ env.SSH }} "echo 'stub data' >> ${{ env.CERT_PATH }}/chain.pem || exit 0"
+          ${{ env.SSH }} "echo 'stub data' >> ${{ env.DHP_PATH }}/dhparam.pem || exit 0"
 
           ${{ env.SSH }} "sudo echo 'server { \
               listen 443 ssl default_server reuseport; \
@@ -74,7 +80,7 @@ jobs:
           ${{ env.SSH }} "sudo docker create -it -p 80:80 -p 443:443 \
             --env CERTBOT_EMAIL=petr.girich@yandex.ru \
             -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
-            -v /etc/nginx/user_conf.d:/etc/nginx/user_conf.d:ro \
+            -v ${{ env.CONF_PATH }}:/etc/nginx/user_conf.d:ro \
             --name certbot --pull never \
             jonasal/nginx-certbot"
       # sudo docker container start -a certbot
