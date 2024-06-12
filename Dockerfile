@@ -5,7 +5,7 @@ RUN npm install -g @angular/cli@18
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN ng build --prod
+RUN ng build
 
 # production stage
 FROM nginx:alpine-slim as production
