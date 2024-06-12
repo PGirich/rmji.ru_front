@@ -26,16 +26,16 @@ jobs:
 
       - name: Deploy certbot to VPS by SSH - volume
         run: |
-          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/"
-          ${{ env.SSH }} "sudo rm -f /etc/nginx/user_conf.d/nginx.conf"
-          ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf"
+          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/user_conf.d/ || exit 0"
+          ${{ env.SSH }} "sudo rm -f /etc/nginx/user_conf.d/nginx.conf || exit 0"
+          ${{ env.SSH }} "sudo touch /etc/nginx/user_conf.d/nginx.conf || exit 0"
           ${{ env.SSH }} "sudo chmod 777 /etc/nginx/user_conf.d/nginx.conf"
-          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/live/rmji/"
-          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/dhparams/"
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/fullchain.pem
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/privkey.pem
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/chain.pem
-          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/dhparams/dhparam.pem
+          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/live/rmji/ || exit 0"
+          ${{ env.SSH }} "sudo mkdir -p -v /etc/nginx/nginx_secrets/dhparams/ || exit 0"
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/fullchain.pem || exit 0"
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/privkey.pem || exit 0"
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/live/rmji/chain.pem || exit 0"
+          ${{ env.SSH }} "sudo touch /etc/nginx/nginx_secrets/dhparams/dhparam.pem || exit 0"
           ${{ env.SSH }} "sudo echo 'server { \
               listen 443 ssl default_server reuseport; \
               listen [::]:443 ssl default_server reuseport; \
