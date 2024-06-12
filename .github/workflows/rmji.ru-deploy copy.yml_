@@ -72,22 +72,17 @@ jobs:
 
       - name: Pull certbot to VPS
         run: |
-          ${{ env.SSH }} "sudo docker pull certbot/certbot:latest"
+          ${{ env.SSH }} "sudo docker pull jonasal/nginx-certbot:latest"
 
       - name: Create certbot container on VPS
         run: |
           ${{ env.SSH }} "sudo docker create -it -p 80:80 -p 443:443 \
+            --env CERTBOT_EMAIL=petr.girich@yandex.ru \
             -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
             -v ${{ env.CONF_PATH }}:/etc/nginx/user_conf.d:ro \
             --name certbot --pull never \
-            certbot/certbot \
-            certonly --webroot \
-            --email petr.girich@yandex.ru \
-            --agree-tos \
-            --webroot-path=/etc/letsencrypt \
-            --staging \
-            -d rmji.ru -d www.rmji.ru \
-            "
+            jonasal/nginx-certbot"
+
       - name: Create certbot container on VPS
         run: |
           ${{ env.SSH }} "sudo docker container start -a certbot"
