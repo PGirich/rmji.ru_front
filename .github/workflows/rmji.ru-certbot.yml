@@ -1,4 +1,4 @@
-name: publish docker image
+name: Generate SSL certificates by certbot
 
 on: workflow_dispatch
 
@@ -50,7 +50,7 @@ jobs:
       - name: Create certbot container on VPS
         run: |
           ${{ env.SSH }} "sudo docker create \
-            -it -p 80:80 \
+            -it --rm -p 80:80 \
             -v ${{ env.CERT_PATH }}:/etc/letsencrypt \
             --name certbot --pull never \
             certbot/certbot \

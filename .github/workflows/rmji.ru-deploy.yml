@@ -1,4 +1,4 @@
-name: publish docker image
+name: Deploy rmji.ru
 
 on:
   push:
@@ -66,4 +66,4 @@ jobs:
 
       - name: Run app on VPS
         run: |
-          ${{ env.SSH }} "sudo docker container start -d -a rmji"
+          ${{ env.SSH }} "sudo docker container start -a rmji"
