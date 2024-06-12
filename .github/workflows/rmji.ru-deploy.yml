@@ -78,6 +78,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Error
+        run: |
+          exit -1
+
       - name: ${{ github.actor }} run checkout for ${{ github.repository}}
         uses: actions/checkout@v4
 
