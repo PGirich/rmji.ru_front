@@ -32,35 +32,7 @@ jobs:
 
       - name: Install certbot artefacts
         run: |
-          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CONF_PATH }} || exit 0"
-          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
-          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.DHP_PATH }} || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/fullchain.pem || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/privkey.pem || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/chain.pem || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.DHP_PATH }}/dhparam.pem || exit 0"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/fullchain.pem"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/privkey.pem"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/chain.pem"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.DHP_PATH }}/dhparam.pem"
-          ${{ env.SSH }} "sudo echo '. ' >> ${{ env.CERT_PATH }}/fullchain.pem"
-          ${{ env.SSH }} "echo '. ' >> ${{ env.CERT_PATH }}/privkey.pem || exit 0"
-          ${{ env.SSH }} "echo '. ' >> ${{ env.CERT_PATH }}/chain.pem || exit 0"
-          ${{ env.SSH }} "echo '. ' >> ${{ env.DHP_PATH }}/dhparam.pem || exit 0"
-          ${{ env.SSH }} "sudo rm -f ${{ env.CONF_PATH }}/nginx.conf || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.CONF_PATH }}/nginx.conf || exit 0"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.CONF_PATH }}/nginx.conf"
-          ${{ env.SSH }} "sudo echo 'server { \
-              listen 443 ssl default_server reuseport; \
-              listen [::]:443 ssl default_server reuseport; \
-              server_name rmji.ru www.rmji.ru; \
-              ssl_certificate /etc/letsencrypt/live/rmji/fullchain.pem; \
-              ssl_certificate_key /etc/letsencrypt/live/rmji/privkey.pem; \
-              ssl_trusted_certificate /etc/letsencrypt/live/rmji/chain.pem; \
-              ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem; \
-              return 200; \
-              add_header Content-Type text/plain; \
-            }' >> /etc/nginx/user_conf.d/nginx.conf"
+           ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
 
       - name: Kill containers on VPS
         run: |
@@ -76,18 +48,19 @@ jobs:
 
       - name: Create certbot container on VPS
         run: |
-          ${{ env.SSH }} "sudo docker create -it -p 80:80 -p 443:443 \
+          ${{ env.SSH }} "sudo docker create \
+            -it -p 80:80 \
             -v /etc/nginx/nginx_secrets:/etc/letsencrypt \
-            -v ${{ env.CONF_PATH }}:/etc/nginx/user_conf.d:ro \
             --name certbot --pull never \
             certbot/certbot \
-            certonly --webroot \
+            certonly --standalone --non-interactive \
             --email petr.girich@yandex.ru \
             --agree-tos \
-            --webroot-path=/etc/letsencrypt \
-            --staging \
+            --preferred-challenges http \
+            --dry-run \
             -d rmji.ru -d www.rmji.ru \
             "
+
       - name: Create certbot container on VPS
         run: |
           ${{ env.SSH }} "sudo docker container start -a certbot"
