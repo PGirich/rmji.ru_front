@@ -1,13 +1,10 @@
 name: publish docker image
 
-on:
-  push:
-    branches: ["master"]
+on: workflow_dispatch
 
 env:
   REGISTRY: ghcr.io
   REGISTRY_USER: PGirich
-  IMAGE_NAME: pgirich/rmji:latest
   SSH: ssh ${{ secrets.VPS_LOGIN }}@${{ secrets.VPS_IP }} -i ~/.ssh/id_rsa
   CERT_PATH: /etc/nginx/nginx_secrets
   # cert files in: /etc/nginx/nginx_secrets/live/rmji.ru/*.pem
@@ -15,12 +12,15 @@ env:
 
 jobs:
   ############################################
-  publish:
-    name: publish rmji.ru app
+  certbot:
+    name: publish certbot
     runs-on: ubuntu-latest
-    #needs: certbot
 
     steps:
+      - name: No regular calls to letsencrypt
+        run: |
+          exit -1
+
       - name: ${{ github.actor }} run checkout for ${{ github.repository}}
         uses: actions/checkout@v4
 
@@ -31,39 +31,37 @@ jobs:
           cat ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_IP }} > ~/.ssh/known_hosts
 
-      - name: Build the Docker image - ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Install certbot artefacts
         run: |
-          docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Login to GitHub Container Registry - ${{ env.REGISTRY }}
-        run: |
-          docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}
-
-      - name: Push the Docker image
-        run: |
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
 
       - name: Kill containers on VPS
         run: |
-          ${{ env.SSH }} "sudo docker rm -f rmji || exit 0"
+          ${{ env.SSH }} "sudo docker rm -f certbot || exit 0"
 
       - name: Login to registry from VPS - ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }}
         run: |
           ${{ env.SSH }} "sudo docker login ${{ env.REGISTRY }}/${{ env.REGISTRY_USER }} -u ${{ env.REGISTRY_USER }} -p ${{ secrets.GHCR_PAT }}"
 
-      - name: Pull app to VPS
+      - name: Pull certbot to VPS
         run: |
-          ${{ env.SSH }} "sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          ${{ env.SSH }} "sudo docker pull certbot/certbot:latest"
 
-      - name: Create app container on VPS
+      - name: Create certbot container on VPS
         run: |
           ${{ env.SSH }} "sudo docker create \
-          -d -it -p 80:80 -p 443:443 \
-          -v ${{ env.CERT_PATH }}:/etc/letsencrypt \
-          --name rmji --pull never \
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
-          "
+            -it -p 80:80 \
+            -v ${{ env.CERT_PATH }}:/etc/letsencrypt \
+            --name certbot --pull never \
+            certbot/certbot \
+            certonly --standalone --non-interactive \
+            --email petr.girich@yandex.ru \
+            --agree-tos \
+            --preferred-challenges http \
+            -d rmji.ru -d www.rmji.ru \
+            "
+        #--dry-run \
 
-      - name: Run app on VPS
+      - name: Create certbot container on VPS
         run: |
-          ${{ env.SSH }} "sudo docker container start -a rmji"
+          ${{ env.SSH }} "sudo docker container start -a certbot"
