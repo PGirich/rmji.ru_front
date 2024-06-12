@@ -33,24 +33,11 @@ jobs:
       - name: Install certbot artefacts
         run: |
           ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CONF_PATH }} || exit 0"
+          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
+          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.DHP_PATH }} || exit 0"
           ${{ env.SSH }} "sudo rm -f ${{ env.CONF_PATH }}/nginx.conf || exit 0"
           ${{ env.SSH }} "sudo touch ${{ env.CONF_PATH }}/nginx.conf || exit 0"
           ${{ env.SSH }} "sudo chmod 777 ${{ env.CONF_PATH }}/nginx.conf"
-          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.CERT_PATH }} || exit 0"
-          ${{ env.SSH }} "sudo mkdir -p -v ${{ env.DHP_PATH }} || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/fullchain.pem || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/privkey.pem || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.CERT_PATH }}/chain.pem || exit 0"
-          ${{ env.SSH }} "sudo touch ${{ env.DHP_PATH }}/dhparam.pem || exit 0"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/fullchain.pem"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/privkey.pem"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.CERT_PATH }}/chain.pem"
-          ${{ env.SSH }} "sudo chmod 777 ${{ env.DHP_PATH }}/dhparam.pem"
-          ${{ env.SSH }} "sudo echo 'TRUSTED CERTIFICATE' >> ${{ env.CERT_PATH }}/fullchain.pem"
-          ${{ env.SSH }} "echo 'TRUSTED CERTIFICATE' >> ${{ env.CERT_PATH }}/privkey.pem || exit 0"
-          ${{ env.SSH }} "echo 'TRUSTED CERTIFICATE' >> ${{ env.CERT_PATH }}/chain.pem || exit 0"
-          ${{ env.SSH }} "echo 'TRUSTED CERTIFICATE' >> ${{ env.DHP_PATH }}/dhparam.pem || exit 0"
-
           ${{ env.SSH }} "sudo echo 'server { \
               listen 443 ssl default_server reuseport; \
               listen [::]:443 ssl default_server reuseport; \
@@ -83,7 +70,10 @@ jobs:
             -v ${{ env.CONF_PATH }}:/etc/nginx/user_conf.d:ro \
             --name certbot --pull never \
             jonasal/nginx-certbot"
-      # sudo docker container start -a certbot
+
+      - name: Create certbot container on VPS
+        run: |
+          ${{ env.SSH }} "sudo docker container start -a certbot"
 
   publish:
     name: publish rmji.ru app
