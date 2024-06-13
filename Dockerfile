@@ -8,12 +8,12 @@ COPY . .
 RUN ng build
 
 # production stage
-FROM nginx:alpine-slim as production
+FROM nginx:alpine as production
 COPY --from=build /app/dist/rmji.ru/browser /etc/nginx/html
 COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
 RUN rm /etc/nginx/conf.d/default.conf
-EXPOSE 80
-EXPOSE 443
-#CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80 443
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]
 
 
