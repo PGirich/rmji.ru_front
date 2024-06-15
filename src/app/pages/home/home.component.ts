@@ -19,7 +19,6 @@ import { HomelinkCardComponent } from '../../components/homelink-card/homelink-c
     </div>
     <hr />
     @for (link of this.links; track link.ref) {
-      {{link.ref}}
       <app-homelink-card [link]="link"></app-homelink-card>
     }
   `,
