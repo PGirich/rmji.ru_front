@@ -7,13 +7,27 @@ export type UsefulLink = {
   img: string,
 }
 
-export const homeLinks:Array<UsefulLink> = [
+export const usefulLinks:Array<UsefulLink> = [
   {
-    ref:`https://wuxiayue.com/list/1024/`,
-    name:`Веб-новелла Fairy Wood Romance, author： а little lucky cat, 2022- (1614 глав, не окончено)`,
-    text:`In a turbulent era, a young man who escaped from famine was sold into a mine for ten steamed buns. However, he accidentally obtained a 'Dry Water Sutra' and embarked on the path of cultivation. Qi refining, foundation building, golden elixir, and birth of a baby... On the road to cultivating immortality, he overcame thorns and thorns, refined weapons and pills, practiced magic and gods, and overcame tribulations against the will of heaven. When one day he stood at the pinnacle of the world, he was surprised to find...`,
-    rateText:`Машинный перевод снижает удовольствие от мира, очень похожего на вселенную Путешествия к бессмертию, но приноровиться можно. Строго говоря, это не фанфик, но мир очень похож`,
-    rate:4,
-    img:'./record-of-mortal-cultivating-to-immortal.jpg'
+    ref:`https://rmji.fandom.com/wiki/Main`,
+    name:`Вики веб-новеллы "Путешествие к бессмертию"`,
+    text:`This wiki explores the world and characters from the Chinese Novel series written by Wang Yu (忘语) published by Qidian. The novel titled (凡人修仙传) is translated to "A Record of a Mortal's Journey to Immortality" and has its own 3D Animation series under the name "Fanren Xiu Xian Chuan"[1].
+    The novel consists of two series :
+    A Record of a Mortal's Journey to Immortality (凡人修仙传)
+    A Record of a Mortal's Journey to Immortality : Immortal World (凡人修仙之仙界篇)
+    The contents on this wiki contain spoilers for both series.`,
+    rateText:`Более 400 статей контента`,
+    rate:3,
+    img:'./rmji_wiki.webp'
   },
+  {
+    ref:`https://a-record-of-a-mortal-is-journey-to-immortality.fandom.com/wiki/A_Record_of_a_Mortal_is_Journey_to_Immortality_Wiki:A_Record_of_a_Mortal%27s_Journey_to_Immortality_Wiki`,
+    name:`Неофициальное вики`,
+    text:`Welcome to the A Record of a Mortal's Journey to Immortality Wiki by fans for fans
+This is an unofficial wiki created by fans for fans, which documents the world of the Chinese novel A Record of a Mortal's Journey to Immortality (凡人修仙传) and its sequel Immortal Realm (凡人修仙之仙界篇), collectively referred to as Fanren henceforth, including its adaptations. Fanren is a popular Chinese Xianxia web novel by writer Wang Yu (忘语).`,
+    rate:5,
+    rateText:`Огромное количество контента, более 1700 статей. Там же можно почитать книгу на английском языке.`,
+    img:'./rmji_chin_char.webp'
+  }
+
 ]
