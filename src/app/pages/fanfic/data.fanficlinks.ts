@@ -37,4 +37,23 @@ How to maximize the probability of foundation building?`,
     rate: 3,
     img: './fanfic_path.jpg',
   },
+  {
+    ref:`https://www.fannovels.org/novel/ke387113.html`,
+    name:`Веб-новелла Mortal: Reincarnated as Han Li's sister, автор: 是念来过倒`,
+    text:`Luo Ningxin murmured to herself. She often read novels, so she was no stranger to this thing. Looking carefully, she saw a line of words written on the gray transparent wall:
+【Chopping firewood: 5300／10000 Xiaocheng】`,
+rateText: `Сестре Хан Ли нужна систма? Серьезно? Ей нужны духовные корни, остальное ей обеспечит любимый братик!`,
+rate: 2,
+img: './fanfic_sister.jpg',
+  },
+  {
+    ref:`https://www.fannovels.org/novel/journey-to-longevity.html`,
+    name:`Веб-новелла Journey To Longevity, автор: A_Bai_Chi (1050 глав, пишется)`,
+    text:`Chen Shiping, a Qi training monk from the Foundation Establishment family, is struggling in the world of cultivating immortals`,
+    rateText: `Очень похожий сеттинг. Вместо зеленой бутылочки у героя есть старая лампа, помогающая в культивации`,
+rate: 5,
+img: './fanfic_long.webp',
+
+
+  }
 ];

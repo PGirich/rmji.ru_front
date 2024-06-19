@@ -8,6 +8,11 @@ import { HomelinkCardComponent } from '../../components/homelink-card/homelink-c
   imports: [HomelinkCardComponent],
   template: `
     <div class="app-home__headwrapper">
+      <div class="app-home__head">
+        Китайский автор Wang Yu погружает нас в историю культиватора Хан Ли,
+        прошедшего долгий путь "от карпа до дракона" полагаясь только на себя и
+        зеленую бутылочку... Каждый шаг на пути к бессмертию, вершина конденсации ци, построение основания, создание ядра, новорожденная душа, божественная трансформация ... - открывает культиватору новые горизонты и ставит его перед новыми вызовами.
+      </div>
       <img class="app-home__altnamesimg" src="./vertical_scroll.png" />
       <div class="app-home__altnames">
         <strong>Альтернативные названия: </strong>A Record of a Mortal's Journey
@@ -19,10 +24,13 @@ import { HomelinkCardComponent } from '../../components/homelink-card/homelink-c
     </div>
     <hr />
     @for (link of this.links; track link.ref) {
-      <app-homelink-card [link]="link"></app-homelink-card>
+    <app-homelink-card [link]="link"></app-homelink-card>
     }
   `,
   styles: `
+    .app-home__head{
+      padding: 10px
+    }
     .app-home__altnamesimg {
       display: float;
       float: left;

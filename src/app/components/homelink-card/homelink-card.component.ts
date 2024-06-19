@@ -9,7 +9,7 @@ import { RatestarsComponent } from '../ratestars/ratestars.component';
   template: `
     @if (link) {
       <div class="app-homelink-card">
-        <img class="app-homelink-card__img" [src]="link.img" />
+        <img class="app-homelink-card__img" [src]="link.img" [alt]="link.name" />
         <a [href]="link.ref">{{ link.name }}</a>
         <p>{{ link.text }}</p>
         <p><app-ratestars [stars]="link.rate" />{{ link.rateText }}</p>
