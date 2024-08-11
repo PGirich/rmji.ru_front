@@ -53,7 +53,16 @@ img: './fanfic_sister.jpg',
     rateText: `Очень похожий сеттинг. Вместо зеленой бутылочки у героя есть старая лампа, помогающая в культивации`,
 rate: 5,
 img: './fanfic_long.webp',
-
-
+  },
+  {
+    ref:`https://ranobes.top/novels/1206504-i-am-evergreen-in-the-world-of-cultivating-immortals.html`,
+    name:`Веб-новелла I Shall Be Everlasting In the World of Immortals, автор: Fast Food Restaurant (500+ глав, пишется)`,
+    text:`This book follows a "mortal framework" where the protagonist starts as an ordinary person. The story incorporates elements of cautious strategy, longevity, and some aspects of reincarnation. It is not the type where the character continually reincarnates to gain power (known as the "hundred lives" trope). The protagonist’s special abilities or advantages, known as "golden fingers," will be developed as the story progresses.
+Although the protagonist adopts a cautious approach, it is not to an extreme degree. Once strength is sufficient, he will act decisively, crushing enemies while pretending to be weak, and will not shy away from obtaining crucial resources at important junctures.
+    ch.68 Author Notes: ... Referencing "A Record of a Mortal's Journey to Immortality," Han Li relied on taking pills to reach Foundation Establishment at the age of 25, although the longevity and spiritual root settings in this book are slightly different...`,
+    rateText: `Очень похожий сеттинг. У гг третья реинкарнация.`,
+rate: 5,
+img: './fanfic_evergreen.webp',
   }
+
 ];
